@@ -19,6 +19,7 @@ typedef struct Game Game;
 struct Game /* the state of the game at each possible move */
 {
 	unsigned int size;
+	unsigned int flips;
 	int * pancakes;
 };
 

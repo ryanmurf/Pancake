@@ -17,15 +17,34 @@ Game *games[10];
 
 void init_args(int argc, char **argv);
 void readGameFile(const char *s);
+void flip(Game *game, int flip);
+int max(Game *g, int n);
+void pancakeFlipSort(Game *g);
 
 int main(int argc, char *argv[]) {
+	int i=0,j=0;
+	Game *g;
 	nGames = 0;
 	init_args(argc, argv);
 
 	readGameFile(_file);
 
 	printf("Games : %u\n", nGames);
-	printf("%s", _file);
+
+	for(i=0; i<nGames; i++) {
+		printf("Game %u\n", i+1);
+		g = games[i];
+		for(j=0; j<g->size; j++) {
+			printf("%u ", g->pancakes[j]);
+		}
+		printf("\n");
+		pancakeFlipSort(g);
+		printf("0 (%u)\n", g->flips);
+		//for (j = 0; j < g->size; j++) {
+		//	printf("%u ", g->pancakes[j]);
+		//}
+		printf("\n");
+	}
 
 	return 0;
 }
@@ -52,6 +71,7 @@ void readGameFile(const char *s) {
 	int lineno=0, i=0;
 	char * pch;
 	Game *game;
+	char buf[1024];
 
 	int gameSize = 0;
 
@@ -67,6 +87,8 @@ void readGameFile(const char *s) {
 	while(GetALine(f, inbuf)) {
 		game = malloc(sizeof(Game));
 
+		strcpy(buf,inbuf);
+
 		pch = strtok(inbuf, " ");
 		while (pch != NULL)
 		{
@@ -74,24 +96,23 @@ void readGameFile(const char *s) {
 			pch = strtok (NULL, " ");
 		}
 		game->size = gameSize;
+		game->flips = 0;
 		game->pancakes = malloc(sizeof(int) * gameSize);
 		gameSize = 0;
 
 		i=0;
-		pch = strtok(inbuf, " ");
+		pch = strtok(buf, " ");
 		while (pch != NULL) {
 			game->pancakes[i] = atoi(pch);
 			i++;
 			pch = strtok(NULL, " ");
 		}
 
-
 		games[nGames] = game;
 		nGames++;
 
 		lineno++;
 	}
-
 }
 
 void init_args(int argc, char **argv) {
@@ -147,4 +168,63 @@ void init_args(int argc, char **argv) {
 		a++; /* move to next valid arg-value position */
 
 	} /* end for(i) */
+}
+
+/*
+ * This will flip the stack of pancakes at flip.
+ * pancakes are ordered top.......bottom.
+ * flip(,1) will flip the entire stack.
+ * 1 to size are possible flip values.
+ */
+void flip(Game *game, int flip) {
+	int i,end, temp;
+
+	if(flip==game->size)
+		return;
+	if(flip < 0 || flip > game->size) {
+		printf("Invalid flip index in flip.");
+		exit(1);
+	}
+
+
+	end = game->size - flip;
+
+	for(i=0; i<end; i++, end--) {
+		temp = game->pancakes[i];
+		game->pancakes[i] = game->pancakes[end];
+		game->pancakes[end] = temp;
+	}
+
+	printf("%u ", flip);
+	game->flips++;
+}
+
+/*
+ * This will find the max from top, index 0, to (n-1).
+ * will return the index
+ */
+int max(Game *g, int n) {
+	int idxn, i;
+	for(idxn=0, i=0; i<n; i++)
+		if(g->pancakes[i] > g->pancakes[idxn])
+			idxn = i;
+	return idxn;
+}
+
+/*
+ * This will flip the largest to the bottom of the pile
+ * repeated until done.
+ */
+void pancakeFlipSort(Game *g) {
+	int i;
+	int idxMax;
+
+	for(i=g->size; i>1; i--) {
+		idxMax = max(g,i);
+
+		if(idxMax != (i-1)) {
+			flip(g, g->size-idxMax);
+			flip(g, g->size-(i-1));
+		}
+	}
 }
