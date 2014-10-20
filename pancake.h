@@ -23,4 +23,7 @@ struct Game /* the state of the game at each possible move */
 	int * pancakes;
 };
 
+void initialize_search(Game *game);
+void flip(Game *game, int flip);
+
 #endif /* PANCAKE_H_ */

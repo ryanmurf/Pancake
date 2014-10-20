@@ -17,7 +17,7 @@ Game *games[10];
 
 void init_args(int argc, char **argv);
 void readGameFile(const char *s);
-void flip(Game *game, int flip);
+
 int max(Game *g, int n);
 void pancakeFlipSort(Game *g);
 
@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
 	init_args(argc, argv);
 
 	readGameFile(_file);
+
+	//initialize_search(games[1]);
 
 	printf("Games : %u\n", nGames);
 
