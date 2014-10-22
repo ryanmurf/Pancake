@@ -7,6 +7,7 @@
 
 
 #include "pancake.h"
+#include <time.h>
 
 //buffer used by input statements
 char inbuf[1024];
@@ -22,19 +23,40 @@ int max(Game *g, int n);
 void pancakeFlipSort(Game *g);
 
 int main(int argc, char *argv[]) {
-	int i=0,j=0;
+	int i=0,j=0, k=0, gg=0;
 	Game *g;
 	nGames = 0;
+
 	init_args(argc, argv);
 
+	srand(time(NULL));
+
 	readGameFile(_file);
-
-	//initialize_search(games[1]);
-
+	for (gg = 0; gg < 4; gg++) {
+		printf("Entropy of Game %u : Entropy %u -- ", gg+1, calcEntropy2(games[gg]));
+		printGame(games[gg]);
+		g = games[gg];
+		while (i < 25) {
+			g = initialize_search(g, &k);
+			if (check(g)) {
+				printf("%s0 (%u)\n", g->moves, k);
+				break;
+			} else
+				printf("%s", g->moves);
+			for (j = 0; j < 22; j++)
+				g->moves[j] = '\0';
+			i++;
+		}
+		if(g != games[gg]) {
+			free(g->pancakes);
+			free(g);
+		}
+		k=0;
+	}
 	printf("Games : %u\n", nGames);
 
 	for(i=0; i<nGames; i++) {
-		printf("Game %u\n", i+1);
+		printf("Game %u - Size %u\n", i+1, games[i]->size);
 		g = games[i];
 		for(j=0; j<g->size; j++) {
 			printf("%u ", g->pancakes[j]);
@@ -49,6 +71,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	return 0;
+}
+
+void printGame(Game *g) {
+	int j=0;
+	for (j = 0; j < g->size; j++) {
+		printf("%u ", g->pancakes[j]);
+	}
+	printf("\n");
 }
 
 bool GetALine(FILE *f, char buf[]) {
@@ -100,6 +130,8 @@ void readGameFile(const char *s) {
 		game->size = gameSize;
 		game->flips = 0;
 		game->pancakes = malloc(sizeof(int) * gameSize);
+		for(i=0; i<22; i++)
+			game->moves[i] = '\0';
 		gameSize = 0;
 
 		i=0;
@@ -197,7 +229,7 @@ void flip(Game *game, int flip) {
 		game->pancakes[end] = temp;
 	}
 
-	printf("%u ", flip);
+	//printf("%u ", flip);
 	game->flips++;
 }
 

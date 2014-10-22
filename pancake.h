@@ -18,12 +18,17 @@ typedef struct Game Game;
 
 struct Game /* the state of the game at each possible move */
 {
+	char moves[22];
 	unsigned int size;
 	unsigned int flips;
 	int * pancakes;
 };
 
-void initialize_search(Game *game);
+Game *initialize_search(Game *game, int *movesOverall);
 void flip(Game *game, int flip);
+double calcEntropy(Game *g);
+int calcEntropy2(Game *g);
+bool check(Game *temp);
+void printGame(Game *g);
 
 #endif /* PANCAKE_H_ */
