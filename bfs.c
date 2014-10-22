@@ -39,11 +39,7 @@ Game *initialize_search(Game *game, int *movesOverall) {
 
 	temp = malloc(sizeof(Game *) * size);
 	for (i = 0; i < size; i++) {
-		temp[i] = malloc(sizeof(Game));
-		temp[i]->size = g->size;
-		temp[i]->pancakes = malloc(sizeof(int) * g->size);
-		memcpy(temp[i]->pancakes, g->pancakes, sizeof(int) * g->size);
-		temp[i]->moves[0] = '\0';
+        temp[i] = makeGame(g);	
 		if(game->flips) {
 			idxFlip = (i % (g->size-2))+1;
 			if(idxFlip >= game->flips)
@@ -56,7 +52,7 @@ Game *initialize_search(Game *game, int *movesOverall) {
 			temp[i]->flips = idxFlip;
 		}
 		sprintf(ctemp, "%u ", idxFlip);
-		strcat(temp[i]->moves, ctemp);
+		appendMove(temp[i], ctemp);
 	}
 	tempWinner = minEntropy2(temp, size);
 	if(calcEntropy2(tempWinner) < calcEntropy2(winner)) {
@@ -138,9 +134,8 @@ Game *minEntropy2(Game **array, int size) {
 		}
 	}
 
-	for(i=0; i<22; i++)
-		copy->moves[i] = '\0';
-	strcpy(copy->moves, max->moves);
+    copy->moves[0] = '\0';
+	appendMove(copy, max->moves);
 	copy->pancakes = malloc(sizeof(int) * max->size);
 	for(i=0; i<max->size; i++)
 		copy->pancakes[i] = max->pancakes[i];
@@ -165,8 +160,10 @@ Game ** gen(Game **array, int size) {
 	for(i=0; i<csize; i++) {
 		temp[i] = malloc(sizeof(Game));
 		temp[i]->size = pancakes;
-		temp[i]->pancakes = malloc(sizeof(int) * pancakes);
-		memcpy(temp[i]->pancakes, array[i/(pancakes-2)]->pancakes, sizeof(int) * pancakes);
+		temp[i]->pancakes = malloc(sizeof(char) * pancakes);
+        temp[i]->curSize = array[i/(pancakes-2)]->curSize;
+        temp[i]->maxSize = array[i/(pancakes-2)]->maxSize;
+		memcpy(temp[i]->pancakes, array[i/(pancakes-2)]->pancakes, sizeof(char) * pancakes);
 		strcpy(temp[i]->moves, array[i/(pancakes-2)]->moves);
 		idxFlip = (i % (pancakes-2))+1;
 		if(idxFlip >= array[i/(pancakes-2)]->flips)
@@ -174,7 +171,7 @@ Game ** gen(Game **array, int size) {
 		temp[i]->flips = idxFlip;
 		flip(temp[i], idxFlip);
 		sprintf(ctemp, "%u ", idxFlip);
-		strcat(temp[i]->moves, ctemp);
+		appendMove(temp[i], ctemp);
 	}
 	//printf("\n");
 	return temp;
@@ -199,3 +196,27 @@ bool check(Game *temp) {
 	}
 	return true;
 }
+
+void appendMove(Game* g, char* move) {
+    if (g->curSize >= g->maxSize) {
+        g->maxSize = g->maxSize * 2;
+        char* moves = (char*) malloc(g->maxSize);
+        strcpy(moves, g->moves);
+        free(g->moves);
+        g->moves = moves;
+    }
+    strcat(g->moves, move);
+    g->curSize++;
+}
+
+Game* makeGame(Game* g) {
+    Game* temp = (Game*) malloc(sizeof(Game));
+	temp->size = g->size;
+	temp->pancakes = (Char*) malloc(sizeof(char) * g->size);
+	memcpy(temp->pancakes, g->pancakes, sizeof(char) * g->size);
+    temp->maxSize = 1;
+    temp->curSize = 0;
+    temp->moves = (char*) malloc(sizeof(char) * 3);
+	temp[i]->moves[0] = '\0';
+}
+

@@ -18,10 +18,12 @@ typedef struct Game Game;
 
 struct Game /* the state of the game at each possible move */
 {
-	char moves[22];
-	unsigned int size;
-	unsigned int flips;
-	int * pancakes;
+	char* moves;
+    char* pancakes;
+    char maxSize;
+    char curSize;
+	char size;
+	char flips;
 };
 
 Game *initialize_search(Game *game, int *movesOverall);
@@ -30,5 +32,7 @@ double calcEntropy(Game *g);
 int calcEntropy2(Game *g);
 bool check(Game *temp);
 void printGame(Game *g);
+void appendMove(Game* g, char* move);
+Game* makeGame(Game* g);
 
 #endif /* PANCAKE_H_ */
