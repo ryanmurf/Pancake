@@ -41,11 +41,10 @@ int main(int argc, char *argv[]) {
 			if (check(g)) {
 				printf("%s0 (%u)\n", g->moves, k);
 				break;
-			} else
+			} else {
 				printf("%s", g->moves);
-			for (j = 0; j < 22; j++)
-				g->moves[j] = '\0';
-			i++;
+            }
+            g->moves[0] = '\0';
 		}
 		if(g != games[gg]) {
 			free(g->pancakes);
@@ -130,8 +129,7 @@ void readGameFile(const char *s) {
 		game->size = gameSize;
 		game->flips = 0;
 		game->pancakes = malloc(sizeof(int) * gameSize);
-		for(i=0; i<22; i++)
-			game->moves[i] = '\0';
+		game->moves[0] = '\0';
 		gameSize = 0;
 
 		i=0;
