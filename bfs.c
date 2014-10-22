@@ -212,11 +212,12 @@ void appendMove(Game* g, char* move) {
 Game* makeGame(Game* g) {
     Game* temp = (Game*) malloc(sizeof(Game));
 	temp->size = g->size;
-	temp->pancakes = (Char*) malloc(sizeof(char) * g->size);
+	temp->pancakes = (char*) malloc(sizeof(char) * g->size);
 	memcpy(temp->pancakes, g->pancakes, sizeof(char) * g->size);
     temp->maxSize = 1;
     temp->curSize = 0;
     temp->moves = (char*) malloc(sizeof(char) * 3);
-	temp[i]->moves[0] = '\0';
+	temp->moves[0] = '\0';
+    return temp;
 }
 

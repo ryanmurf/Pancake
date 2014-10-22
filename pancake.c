@@ -41,10 +41,10 @@ int main(int argc, char *argv[]) {
 			if (check(g)) {
 				printf("%s0 (%u)\n", g->moves, k);
 				break;
-			} else
+			} else {
 				printf("%s", g->moves);
             }
-            g->moves[0];
+            g->moves[0] = '\0';
 		}
 		if(g != games[gg]) {
 			free(g->pancakes);
