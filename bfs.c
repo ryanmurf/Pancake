@@ -93,6 +93,10 @@ Game *initialize_search(Game *game, int *movesOverall) {
 	return winner;
 }
 
+Game **reduce(Game **array, int *size, Game *winner) {
+
+}
+
 Game *minEntropy(Game **array, int size) {
 	int i;
 	double minEntropy;
