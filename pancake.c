@@ -23,7 +23,7 @@ int max(Game *g, int n);
 void pancakeFlipSort(Game *g);
 
 int main(int argc, char *argv[]) {
-	int i=0,j=0, k=0, gg=0;
+	int k=0, gg=0;
 	Game *g;
 	nGames = 0;
 
@@ -33,19 +33,18 @@ int main(int argc, char *argv[]) {
 
 	readGameFile(_file);
 	for (gg = 0; gg < 13; gg++) {
-		printf("Entropy of Game %u : Entropy %u -- ", gg+1, calcEntropy2(games[gg]));
-		printGame(games[gg]);
+		printf("Entropy of Game %u Size %u : Entropy %u\n", gg+1, games[gg]->size, calcEntropy2(games[gg]));
+		//printGame(games[gg]);
 		g = games[gg];
-		//while (i < 25) {
-			g = initialize_search(g, &k);
-			if (check(g)) {
-				printf("%s0 (%u)\n", g->moves, k);
-				//break;
-			} else {
-				printf("%s", g->moves);
-            }
-            g->moves[0] = '\0';
-		//}
+
+		g = initialize_search(g, &k);
+		if (check(g)) {
+			printf("%s0 (%u)\n", g->moves, k);
+		} else {
+			printf("%s", g->moves);
+        }
+        g->moves[0] = '\0';
+
 		if(g != games[gg]) {
 			free(g->pancakes);
 			free(g->moves);
@@ -53,7 +52,8 @@ int main(int argc, char *argv[]) {
 		}
 		k=0;
 	}
-	printf("Games : %u\n", nGames);
+	//Trivial Solution
+	/*printf("Games : %u\n", nGames);
 
 	for(i=0; i<nGames; i++) {
 		printf("Game %u - Size %u\n", i+1, games[i]->size);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 		//	printf("%u ", g->pancakes[j]);
 		//}
 		printf("\n");
-	}
+	}*/
 
 	return 0;
 }
