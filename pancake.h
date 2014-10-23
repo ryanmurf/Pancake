@@ -20,8 +20,7 @@ struct Game /* the state of the game at each possible move */
 {
 	char* moves;
     char* pancakes;
-    char maxSize;
-    char curSize;
+    int curSize;
 	char size;
 	char flips;
 };

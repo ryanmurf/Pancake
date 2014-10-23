@@ -14,7 +14,7 @@ char inbuf[1024];
 char _file[1024];
 
 int nGames=0;
-Game *games[10];
+Game *games[13];
 
 void init_args(int argc, char **argv);
 void readGameFile(const char *s);
@@ -32,22 +32,23 @@ int main(int argc, char *argv[]) {
 	srand(time(NULL));
 
 	readGameFile(_file);
-	for (gg = 0; gg < 4; gg++) {
+	for (gg = 0; gg < 13; gg++) {
 		printf("Entropy of Game %u : Entropy %u -- ", gg+1, calcEntropy2(games[gg]));
 		printGame(games[gg]);
 		g = games[gg];
-		while (i < 25) {
+		//while (i < 25) {
 			g = initialize_search(g, &k);
 			if (check(g)) {
 				printf("%s0 (%u)\n", g->moves, k);
-				break;
+				//break;
 			} else {
 				printf("%s", g->moves);
             }
             g->moves[0] = '\0';
-		}
+		//}
 		if(g != games[gg]) {
 			free(g->pancakes);
+			free(g->moves);
 			free(g);
 		}
 		k=0;
@@ -129,7 +130,7 @@ void readGameFile(const char *s) {
 		game->size = gameSize;
 		game->flips = 0;
 		game->pancakes = malloc(sizeof(int) * gameSize);
-		game->moves[0] = '\0';
+		//game->moves[0] = '\0';
 		gameSize = 0;
 
 		i=0;
