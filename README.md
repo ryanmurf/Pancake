@@ -43,3 +43,12 @@ Sample Output
 Test File
 
 Your report should include results using the various stacks in this test file. It includes, in order, stacks of size 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100.
+
+Compile
+==========
+cd Pancake
+gcc pancake.c entropy.c bfs.c -o pancake -lm
+
+Use
+==========
+./pancake -f stacks/manystacks.txt
